@@ -789,7 +789,7 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.GrassEnemy, function (sprite622,
     Player_Health.value += -1
 })
 // A function that spawns a dungeon enemy for every diamond tile, along with setting the variable that allows for them to summon bullets to true. Also creates their HP Bars.
-function Summon_Eye () {
+function Summon_Eye (num: number) {
     EyeSpawn = true
     for (let value of tiles.getTilesByType(sprites.dungeon.floorDarkDiamond)) {
         if (Switch) {
@@ -866,7 +866,7 @@ function Summon_Eye () {
         tiles.placeOnRandomTile(EyeDemon, sprites.dungeon.floorDarkDiamond)
         EyeHealth2 = statusbars.create(20, 4, StatusBarKind.EyeHealth)
         EyeHealth2.setBarBorder(1, 15)
-        EyeHealth2.max = 36
+        EyeHealth2.max = num
         EyeHealth2.attachToSprite(EyeDemon)
     }
 }
@@ -906,9 +906,11 @@ function Map (num: number) {
         scene.setBackgroundColor(13)
         SnakeSpawn = false
         sprites.destroyAllSpritesOfKind(SpriteKind.GrassEnemy)
-        Summon_Eye()
         if (Switch) {
             ChangeDungeon()
+            Summon_Eye(37)
+        } else {
+            Summon_Eye(24)
         }
     } else if (num == 2) {
         tiles.placeOnRandomTile(Duck, sprites.builtin.forestTiles6)
@@ -1283,7 +1285,7 @@ statusbars.onZero(StatusBarKind.EyeHealth, function (status) {
     sprites.destroy(status.spriteAttachedTo(), effects.fire, 500)
     Keys += 1
     if (Keys >= 3) {
-        if (Math.percentChance(60)) {
+        if (Math.percentChance(75)) {
             KeyImg = sprites.create(img`
                 . . . . . . . . . . . . . . . . 
                 . . . . . . . . . . . . . . . . 
@@ -1561,6 +1563,8 @@ Duck = sprites.create(img`
     . . . . . . . . . . . . . . . . 
     . . . . . . . . . . . . . . . . 
     `, SpriteKind.Player)
+game.showLongText("A Bird's Journey", DialogLayout.Bottom)
+game.showLongText("Use Arrow keys to move.  Use (A) to attack.   Interact with both (A) and (B).", DialogLayout.Bottom)
 Player_Health = statusbars.create(20, 4, StatusBarKind.Health)
 scene.setBackgroundColor(7)
 Player_Health.setBarBorder(1, 15)
